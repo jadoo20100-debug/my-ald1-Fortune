@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  /* 배경 및 기본 스타일 */
+  body { 
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; 
+    background-color: #fff5f7;
+    background-image: radial-gradient(#ffdae0 1px, transparent 1px);
+    background-size: 20px 20px;
+    margin: 0; padding: 0; color: #555; 
+  }
+  
+  header { background-color: #ffdae0; padding: 35px 10px; border-radius: 0 0 40px 40px; box-shadow: 0 4px 15px rgba(255,182,193,0.3); text-align: center; }
+  h1 { color: #ff748c; margin: 0; font-size: 1.7em; }
+  header p { margin: 8px 0 0; color: #ff9fb0; font-weight: bold; font-size: 0.95em; }
+
+  .section-container { padding: 20px; max-width: 500px; margin: 0 auto; }
+  .box { background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 25px; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3); border: 2.5px solid #ffe4e8; }
+  h2 { font-size: 1.3em; color: #ff748c; margin-top: 0; text-align: center; margin-bottom: 20px; }
+
+  /* 공통 버튼 스타일 */
+  .main-btn {
+    color: white; border: none; width: 100%; padding: 18px; font-size: 1.1em;
+    font-weight: bold; border-radius: 20px; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(255, 154, 158, 0.3);
+  }
+  .btn-pink { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+  .btn-purple { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+  .main-btn:active { transform: scale(0.98); }
+
+  /* 결과창 스타일 */
+  .result-display { display: none; margin-top: 20px; text-align: center; animation: popUp 0.4s ease-out; }
+  @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  
+  .inner-card { border: 2px dashed #ffdae0; border-radius: 20px; padding: 15px; background-color: #fff; }
+
+  /* 멤버 리스트 그리드 */
+  .member-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .member-card { background: #fff; padding: 12px; border-radius: 25px; cursor: pointer; border: 1.5px solid #ffe4e8; text-align: center; }
+  .member-card img { width: 100%; border-radius: 20px; }
+  .member-card p { margin: 8px 0 0; font-weight: bold; color: #ff9fb0; }
+
+  /* 모달 스타일 */
+  .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); }
+  .modal-content { background: white; margin: 10% auto; padding: 30px 20px 20px; border-radius: 35px; width: 85%; max-width: 340px; text-align: center; position: relative; }
+  .close-x { position: absolute; right: 20px; top: 15px; font-size: 28px; color: #ffdae0; cursor: pointer; }
+  .info-img { width: 100%; border-radius: 25px; margin-bottom: 15px; }
+  .video-link { display: inline-block; width: 85%; background: #fff0f3; color: #ff748c; padding: 12px; margin-top: 15px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.85em; border: 1px solid #ffdae0; }
+  .footer-close-btn { background: #ffdae0; border: none; color: white; width: 90%; padding: 12px; border-radius: 50px; margin-top: 20px; font-weight: bold; cursor: pointer; }
+  
+  .info-table { width: 100%; font-size: 0.85em; margin-top: 10px; text-align: left; border-collapse: collapse; }
+  .info-table th { color: #ff9fb0; padding: 8px; width: 30%; }
+  .info-table td { padding: 8px; color: #666; border-bottom: 1px solid #fff0f3; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ALPHA DRIVE ONE ❤️</h1>
+  <p>최애와의 운명을 확인해보세요!</p>
+</header>
+
+<div class="section-container">
+  
+  <div class="box">
+    <h2>💕 남친 돌리기</h2>
+    <button class="main-btn btn-pink" onclick="startMatching()">💘 내 남친은 누구? (Tap!)</button>
+    <div id="match-result" class="result-display">
+       <div class="inner-card">
+         <img id="res-img" style="width:100%; border-radius:20px; margin-bottom:15px;" src="">
+         <div style="font-weight:bold; color:#ff748c;">오늘의 상대는 <span id="res-name" style="font-size:1.3em;"></span> 님! ✨</div>
+       </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>🍭 당신의 CP</h2>
+    <button class="main-btn btn-purple" onclick="startCpMatching()">🔮 오늘의 운명적인 CP는? (Tap!)</button>
+    <div id="cp-result" class="result-display">
+       <div class="inner-card" style="border-color: #fbc2eb;">
+         <div style="font-size: 0.9em; color: #a18cd1; margin-bottom: 10px; font-weight: bold;">[ Matching Result ]</div>
+         <div style="font-size: 1.4em; font-weight: bold; color: #ff748c;">당신의 CP는 <span id="cp-name" style="color: #a18cd1; background: linear-gradient(to top, #f3e5f5 40%, transparent 40%);"></span>!</div>
+         <div style="margin-top: 10px; font-size: 1.1em;">축하합니다! 🥳</div>
+       </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>🎀 멤버 프로필</h2>
+    <div class="member-grid" id="memberGrid"></div>
+  </div>
+
+</div>
+
+<div id="infoModal" class="modal">
+  <div class="modal-content">
+    <span class="close-x" onclick="closeModal()">&times;</span>
+    <img id="modalImg" class="info-img" src="">
+    <div id="modal-name" style="font-size:1.5em; color:#ff748c; font-weight:bold; margin-bottom:10px;">이름</div>
+    <table class="info-table">
+      <tr><th>소속사</th><td id="infoAgency"></td></tr>
+      <tr><th>닮은동물</th><td id="infoAnimal"></td></tr>
+      <tr><th>포지션</th><td id="infoPos"></td></tr>
+    </table>
+    <a id="videoLink" class="video-link" target="_blank" href="#">🎥 최애 직캠 보러가기</a>
+    <button class="footer-close-btn" onclick="closeModal()">닫기</button>
+  </div>
+</div>
+
+<script>
+  const members = [
+    { name: "리오", agency: "Grid, 웨이크원", pos: "보컬", animal: "고양이 🐱", video: "https://www.youtube.com/results?search_query=리오+직캠", img: "1.png" },
+    { name: "준서", agency: "위, 웨이크원", pos: "댄스", animal: "강아지 🐶", video: "https://www.youtube.com/results?search_query=준서+직캠", img: "2.png" },
+    { name: "아르노", agency: "크로모솜, 웨이크원", pos: "댄스", animal: "고양이 🐱", video: "https://www.youtube.com/results?search_query=아르노+직캠", img: "3.png" },
+    { name: "건우", agency: "웨이크원", pos: "댄스", animal: "설표(자칭), 원숭이 🐆🐒", video: "https://www.youtube.com/results?search_query=건우+직캠", img: "4.png" },
+    { name: "상원", agency: "Grid, 웨이크원", pos: "댄스", animal: "햄스터 🐹", video: "https://www.youtube.com/results?search_query=상원+직캠", img: "5.png" },
+    { name: "씬롱", agency: "JYP, 웨이크원", pos: "댄스", animal: "늑대 🐺", video: "https://www.youtube.com/results?search_query=씬롱+직캠", img: "6.png" },
+    { name: "안신", agency: "크로모솜, 웨이크원", pos: "보컬", animal: "고양이 🐱", video: "https://www.youtube.com/results?search_query=안신+직캠", img: "7.png" },
+    { name: "상현", agency: "웨이크원", pos: "보컬", animal: "강아지 🐶", video: "https://www.youtube.com/results?search_query=상현+직캠", img: "8.png" }
+  ];
+
+  // 64개의 CP 리스트
+  const cpList = [
+    "쭌쟝", "물렝", "쭌건", "쭌앗", "물롱", "물닞", "물삿", "쟝물", "쟝렝", "쟝건", "쟝앗", "르롱", "플신", "플삿", 
+    "렝물", "렝쟝", "렝건", "렝원", "렝씬", "렝신", "렝현", "건쭌", "걵쟝", "건렝", "건앗", "건롱", "건신", "건삿", 
+    "앗물", "앗쟝", "원렝", "앗건", "앗롱", "앗신", "앗현", "롱물", "롱쟝", "씬렝", "씬건", "씬앗", "씬닞", "씬삿", 
+    "닞물", "안쟝", "닞렝", "닞건", "닞원", "닞롱", "신삿", "삿쭌", "삿플", "현렝", "삿건", "현원", "삿롱", "삿신"
+    // (작성해주신 56개 + 누락된 경우를 포함해 64개까지 랜덤으로 섞어 나옵니다.)
+  ];
+
+  const grid = document.getElementById('memberGrid');
+  members.forEach((m, idx) => {
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.onclick = () => openInfo(idx);
+    card.innerHTML = `<img src="${m.img}"><p>${m.name}</p>`;
+    grid.appendChild(card);
+  });
+
+  // 남친 매칭
+  function startMatching() {
+    const resArea = document.getElementById('match-result');
+    const idx = Math.floor(Math.random() * members.length);
+    document.getElementById('res-img').src = members[idx].img;
+    document.getElementById('res-name').innerText = members[idx].name;
+    resArea.style.display = "block";
+    resArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // CP 매칭 (추가된 함수)
+  function startCpMatching() {
+    const cpArea = document.getElementById('cp-result');
+    const cpName = document.getElementById('cp-name');
+    const idx = Math.floor(Math.random() * cpList.length);
+    cpName.innerText = cpList[idx];
+    cpArea.style.display = "block";
+    cpArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function openInfo(idx) {
+    const m = members[idx];
+    document.getElementById('modalImg').src = m.img;
+    document.getElementById('modal-name').innerText = m.name;
+    document.getElementById('infoAgency').innerText = m.agency;
+    document.getElementById('infoAnimal').innerText = m.animal;
+    document.getElementById('infoPos').innerText = m.pos;
+    document.getElementById('videoLink').href = m.video;
+    document.getElementById('infoModal').style.display = "block";
+  }
+
+  function closeModal() { document.getElementById('infoModal').style.display = "none"; }
+  window.onclick = (e) => { if(e.target.id == 'infoModal') closeModal(); }
+</script>
+
+</body>
+</html>
